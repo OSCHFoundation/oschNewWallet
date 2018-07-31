@@ -79,47 +79,14 @@ export default {
     }
   },
   mounted(){
-    console.log(StellarSdk);
-    //https://horizon-testnet.stellar.org
-    //StellarSdk.setAllowHttp = true;
-     //var config = new StellarSdk.Config();
+    //set Allow Http
     StellarSdk.Config.setAllowHttp(true);
-    //console.log(config);
-     //config._proto_.setAllowHttp(true);
     StellarSdk.Network.useTestNetwork();
     this.stellarServer = new StellarSdk.Server('https://horizon-testnet.stellar.org');
     //var server = new StellarSdk.Server('http://192.168.1.3:8000');
     // get a list of transactions that occurred in ledger 1400
     var publicKey = "GATTKBB6SHMYIX2BTKQDJ2P34RSTXBNH4IZYZYTTVX5CI72HZZHG5OWQ";
     var secretString = "SBEGIXOOTJ2HY6CJCP3QBBOUUZ32RBPOID4YLQZ5UVPLLHVQ7P2OVIO4";
-    /*
-    server
-        .loadAccount(publicKey)
-        .then(function(account){
-            var transaction = new StellarSdk.TransactionBuilder(account)
-                    // this operation funds the new account with XLM
-                    .addOperation(StellarSdk.Operation.payment({
-                        destination: "GCZYFPY5ZZ2ASKO6NS2ICBWAHMLD54BP5WUDWK7DWABQUWNDBA5ZGKKG",
-                        asset: StellarSdk.Asset.native(),
-                        amount: "2000"
-                    }))
-                    .build();
-            transaction.sign(StellarSdk.Keypair.fromSecret(secretString)); // sign the transaction
-            return server.submitTransaction(transaction);
-        })
-   */
-    /*
-    server.transactions()
-        .forLedger(1400)
-        .call().then(function(r){ console.log(r); });
-    */ 
-    // get a list of transactions submitted by a particular account
-    /*
-    server.transactions()
-        .forAccount('GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW')
-        .call().then(function(r){ console.log(r); });
-    */
-
   }
 }
 </script>

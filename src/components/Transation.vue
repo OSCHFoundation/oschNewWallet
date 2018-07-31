@@ -1,68 +1,39 @@
 <template>
-  <div class="oschBox"> 
-    <div class="logoBox clear">
-        <img src="../assets/oschlogo.png" alt="" class="fl">
-        <h1 class="logoTitle fl">Open Source Chain</h1>
-        <router-link :to="{ path: '/'}">登出</router-link>
+    <div class="oschBox"> 
+        <div class="logoBox clear">
+            <img src="../assets/oschlogo.png" alt="" class="fl">
+            <h1 class="logoTitle fl">Open Source Chain</h1>
+            <router-link :to="{ path: '/'}">登出</router-link>
+        </div>
+        <div class="money_box">
+            <div class="money_box1">
+                <h3>你的余额:</h3>
+                <p><span>{{oschNum}}</span>&nbspOSCH</p>
+                <h3 class="title1">你的公钥:</h3>
+                <p>{{publicKey}}</p>
+            </div>
+         </div>
+        <div class="sendTran">
+            <div class="sendTran1">
+                <h2>发送osch</h2>
+                <div class="inputBox">
+                   <label for="toPublic">to:</label>
+                </div>
+                <div class="inputBox">
+                    <input class="inputText" type="text" id="toPublic" v-model="toPublic" placeholder="请输入公钥">
+                </div>
+                <div class="inputBox">
+                    <label for="sendNum">数量:</label>
+                </div>
+                <div class="inputBox">
+                    <input type="text" class="inputText" id="sendNum" v-model="toOschNum" placeholder="输入发送数量">
+                </div>
+                <div class="inputBox">
+                    <input type="button" class="s-button" value="发送OSCH" @click="sendClick">
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="money_box">
-        <div class="money_box1">
-            <h3>你的余额:</h3>
-            <p><span>{{oschNum}}</span>&nbspOSCH</p>
-            <h3 class="title1">你的公钥:</h3>
-            <p>{{publicKey}}</p>
-        </div>
-     </div>
-    <div class="sendTran">
-        <div class="sendTran1">
-            <h2>发送osch</h2>
-            <div class="inputBox">
-               <label for="toPublic">to:</label>
-            </div>
-            <div class="inputBox">
-                <input class="inputText" type="text" id="toPublic" v-model="toPublic" placeholder="请输入公钥">
-            </div>
-            <div class="inputBox">
-                <label for="sendNum">数量:</label>
-            </div>
-            <div class="inputBox">
-                <input type="text" class="inputText" id="sendNum" v-model="toOschNum" placeholder="输入发送数量">
-            </div>
-            <div class="inputBox">
-                <input type="button" class="s-button" value="发送OSCH" @click="sendClick">
-            </div>
-        </div>
-    </div>
-   <div class="historyBox">
-        <div class="historyBox1">
-            <h2>Transaction History</h2>
-             <el-table
-                :data="tableData"
-                stripe
-                style="width: 100%">
-                <el-table-column
-                  prop="time"
-                  label="Create_Time"
-                  width="200">
-                </el-table-column>
-                <el-table-column
-                  prop="num"
-                  label="Amount"
-                  width="200">
-                </el-table-column>
-                 <el-table-column
-                  prop="to"
-                  label="To"
-                  width="230">
-                </el-table-column>
-                <el-table-column
-                  prop="operation"
-                  label="Operation ID">
-                </el-table-column>
-            </el-table>
-        </div>
-   </div>
-  </div>
 </template>
 <script>
 export default {
@@ -83,6 +54,7 @@ export default {
         var _this = this;
         var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
         var transaction = new StellarSdk.TransactionBuilder(_this.account)
+            // this operation funds the new account with XLM
             .addOperation(StellarSdk.Operation.payment({
                 destination: _this.toPublic,
                 asset: StellarSdk.Asset.native(),
@@ -125,7 +97,7 @@ export default {
                             to: res.records[0].to
                         };            
                         _this.tableData.push(ob);
-                   }else if(res.records[0].type=="create_account"){
+                    }else if(res.records[0].type=="create_account"){
                          var ob = {
                             time: res.records[0].created_at,
                             operation: res.records[0].transaction_hash, 
@@ -181,7 +153,21 @@ export default {
             _this.account = account;
             _this.oschNum = account.balances[0].balance;
         })
-    // var keypair = StellarSdk.Keypair.random();  
+
+    server
+        .loadAccount(publicKey)
+        .then(function(account){
+           var transaction = new StellarSdk.TransactionBuilder(account)
+                   // this operation funds the new account with XLM
+                   .addOperation(StellarSdk.Operation.payment({
+                       destination: "GCZYFPY5ZZ2ASKO6NS2ICBWAHMLD54BP5WUDWK7DWABQUWNDBA5ZGKKG",
+                       asset: StellarSdk.Asset.native(),
+                       amount: "2000"
+                   }))
+                   .build();
+           transaction.sign(StellarSdk.Keypair.fromSecret(secretString)); // sign the transaction
+           return server.submitTransaction(transaction);
+        })
   }
 }
 </script>
