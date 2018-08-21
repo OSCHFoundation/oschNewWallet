@@ -81,7 +81,8 @@ export default {
   methods: {
     sendClick: function(){
         var _this = this;
-        var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+        //https://horizon-testnet.stellar.org
+        var server = new StellarSdk.Server('http://localhost:8000');
         var transaction = new StellarSdk.TransactionBuilder(_this.account)
             .addOperation(StellarSdk.Operation.payment({
                 destination: _this.toPublic,
@@ -100,7 +101,7 @@ export default {
     var _this = this;
     StellarSdk.Config.setAllowHttp(true);
     StellarSdk.Network.useTestNetwork();
-    var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+    var server = new StellarSdk.Server('http://localhost:8000');
     var secretString = "SBEGIXOOTJ2HY6CJCP3QBBOUUZ32RBPOID4YLQZ5UVPLLHVQ7P2OVIO4";
     var strkey = StellarSdk.StrKey;
     var arrPrivate = strkey.decodeEd25519SecretSeed(this.sercet);

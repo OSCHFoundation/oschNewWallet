@@ -60,8 +60,9 @@ export default {
     },
     createAccount: function(){
         var _this = this;
+    
         _this.stellarServer
-            .loadAccount("GATTKBB6SHMYIX2BTKQDJ2P34RSTXBNH4IZYZYTTVX5CI72HZZHG5OWQ")
+            .loadAccount("GAQVWAAFUHV6SWORZAHLM6C5ZCIWVUXDHJ4N6IJ7IJG45DTCNL47EB4G")
             .then(function(account){
                 console.log(account);
                 var transaction = new StellarSdk.TransactionBuilder(account)
@@ -70,7 +71,7 @@ export default {
                       startingBalance: "20"  // in XLM
                     }))
                     .build();
-                transaction.sign(StellarSdk.Keypair.fromSecret('SBEGIXOOTJ2HY6CJCP3QBBOUUZ32RBPOID4YLQZ5UVPLLHVQ7P2OVIO4'));
+                transaction.sign(StellarSdk.Keypair.fromSecret('SARIBF4AOCIZVNCM5BX2YAWBSSHST6L3FUB2CWR3RDUYNIDNSYRH6PGH'));
                 _this.stellarServer.submitTransaction(transaction).then(function(res){
                     alert("账户初始化成功");
                 })
@@ -81,9 +82,11 @@ export default {
   mounted(){
     //set Allow Http
     StellarSdk.Config.setAllowHttp(true);
-    StellarSdk.Network.useTestNetwork();
-    this.stellarServer = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-    //var server = new StellarSdk.Server('http://192.168.1.3:8000');
+//    StellarSdk.Network.useTestNetwork();
+    StellarSdk.Network.use(new StellarSdk.Network('sawyer a handsome yound man'));
+    //https://horizon-testnet.stellar.org
+    this.stellarServer = new StellarSdk.Server('http://localhost:8000');
+   // var server = new StellarSdk.Server('');
     // get a list of transactions that occurred in ledger 1400
     var publicKey = "GATTKBB6SHMYIX2BTKQDJ2P34RSTXBNH4IZYZYTTVX5CI72HZZHG5OWQ";
     var secretString = "SBEGIXOOTJ2HY6CJCP3QBBOUUZ32RBPOID4YLQZ5UVPLLHVQ7P2OVIO4";
